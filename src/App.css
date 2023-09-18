@@ -1,0 +1,59 @@
+.container {
+    background-color: rgb(21, 20, 19);
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+.kids {
+    height: 100vh;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100px;
+    color: black;
+    font-weight: bolder;
+    opacity: 0;
+    transition: all 0.4s;
+}
+
+.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.previous {
+    transform: translateY(-100%);
+}
+
+.next {
+    transform: translateY(100%);
+}
+
+.kids:nth-of-type(1) {
+    background-color: burlywood;
+}
+
+.kids:nth-of-type(2) {
+    background-color: royalblue;
+}
+
+.kids:nth-of-type(3) {
+    background-color: rebeccapurple;
+}
+
+.kids:nth-of-type(4) {
+    background-color: paleturquoise;
+}
+
+button {
+    position: absolute;
+    bottom: 0;
+    z-index: 10;
+}
+
+button:nth-of-type(2) {
+    right: 0;
+}
