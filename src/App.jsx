@@ -6,32 +6,82 @@ import second from "./assets/download.png";
 
 function App() {
 	const [currentPage, setCurrentPage] = useState(0);
-
+  
 	// console.log('first console, currPageRef.current: ', currPageRef.current)
-
+  
 	useEffect(() => {
-		const handleScroll = (() => {
-			let lastEventTimestamp;
+    const handleScroll = () => {
+      let lastEventTimestamp;
 			return function (event) {
-				// console.log("Inside handleScroll, current page is: ", currPageRef.current);
+        // console.log("Inside handleScroll, current page is: ", currPageRef.current);
 				const now = Date.now();
 				if (!lastEventTimestamp || now - lastEventTimestamp >= 100) {
-					if (event.deltaY > 0) {
-						// Scrolling forward (downward)
+          if (event.deltaY > 0) {
+            // Scrolling forward (downward)
 						setCurrentPage((curr) => (curr < 3 ? curr + 1 : curr));
 					} else if (event.deltaY < 0) {
-						// Scrolling backward (upward)
+            // Scrolling backward (upward)
 						setCurrentPage((curr) => (curr > 0 ? curr - 1 : curr));
 					}
-
+          
 					lastEventTimestamp = now;
 				}
 			};
-		})();
-		window.addEventListener("wheel", handleScroll);
-
+    };
+    
+    let touchStart = 0;
+    const handleTouchMove = () => {
+      let lastEventTimestamp;
+      return function (e) {
+        const now = Date.now();
+        if (!lastEventTimestamp || now - lastEventTimestamp >= 500) {
+          // console.log(event.changedTouches[0])
+          const currentTouch = Math.round(e.touches[0].screenY);
+          console.log(e.touches[0].clientY)
+          // if (lastTouch === currentTouch) return;
+          
+          if (touchStart - currentTouch < 0) {
+            console.log("down", touchStart, currentTouch);
+            setCurrentPage((curr) => (curr > 0 ? curr - 1 : curr));
+          
+          } else {
+            console.log("up", touchStart, currentTouch);
+            setCurrentPage((curr) => (curr < 3 ? curr + 1 : curr));
+          
+          }
+              // lastTouch = currentTouch;
+              lastEventTimestamp = now;
+              }
+            }
+          }
+    
+    window.addEventListener('touchstart', (e) => {
+      touchStart = e.touches[0].screenY;
+      console.log("inside touch start, startY: ",e.touches[0].clientY)
+    });
+          
+          
+          
+          // let touchStartPosX = 0;
+          // window.addEventListener('touchmove', (e) => {
+    //   // Different devices give different values with different decimal percentages.
+    //   const currentPageX = Math.round(e.changedTouches[0].screenY);
+    //   if (touchStartPosX === currentPageX) return;
+  
+    //   if (touchStartPosX - currentPageX > 0) {
+    //     console.log("down", touchStartPosX, currentPageX);
+    //   } else {
+      //     console.log("up", touchStartPosX, currentPageX);
+      //   }
+      //   touchStartPosX = currentPageX;
+      // });
+      
+      window.addEventListener("wheel", handleScroll());
+      window.addEventListener("touchmove", handleTouchMove());
+      
 		return () => {
-			window.removeEventListener("wheel", handleScroll);
+			window.removeEventListener("wheel");
+			window.removeEventListener("touchmove");
 		};
 	}, []);
 
